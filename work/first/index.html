@@ -121,7 +121,7 @@
   $10_li = $("#q10 li");
   $11_li = $("#q11 li");
   $10_li.click(function(){
-    clickedIndex = $10_li.index($(this));
+    let clickedIndex = $10_li.index($(this));
     $11_li.eq(clickedIndex).addClass("large");
   })
 </script>
