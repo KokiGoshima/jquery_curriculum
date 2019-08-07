@@ -106,9 +106,7 @@
           var $li = $(".list li");
           $(".list").children("li").show();
 
-          if(selectedVal === "all"){
-            return false;
-          }
+          if(selectedVal === "all") return;
 
           $li.each(function(index,li){
             let categoryType = $(li).data("category-type");
@@ -117,7 +115,7 @@
             }
           })
         })
-      }
+      });
 
     </script>
   </body>

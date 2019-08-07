@@ -65,11 +65,12 @@
             $(this).children("ul").stop().slideDown();
           },
           function(){
-            $(this).children("ul").stop();
-            $(this).children("ul").slideUp();
-          }
+            // $(this).children("ul").stop();
+            // $(this).children("ul").slideUp();
+            $(this).children("ul").stop().slideUp();
+          },
         );
-      }
+      })
 
     </script>
   </body>
