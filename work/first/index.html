@@ -69,6 +69,7 @@
 </div>
 <script src="../../common/js/jquery.js"></script>
 <script>
+$(function() {
 // 第1問  id='q1'の要素の文字色を赤色にせよ。
   $("#q1").css("color", "red");
 // 第2問  id='q2'の要素をクリックしたら背景色をピンクにせよ。
@@ -101,29 +102,40 @@
 // 第7問  id='q7'の子要素をクリックしたら、その要素のインデックス（何番目か）をconsole.log()とalert()を用いて表示させよ。
   $li = $("#q7 li");
   $li.click(function(){
-    let clickedIndex = $li.index($(this));
-    console.log(clickedIndex);
-    alert(clickedIndex);
+    console.log(this);
+    // let clickedIndex = $li.index($(this));
+    // let clickedIndex = $li.index(this);
+    // let clickedIndex = $(this).index();
+    // alert(clickedIndex);
   });
 // 第8問  id='q8'の要素をhoverしたらlargeというクラスを付与し、hoverが外れたら、クラスを削除せよ。
+
+  // $("#q8").hover(
+  //   function(){
+  //     $(this).addClass("large");
+  // },
+  // function(){
+  //     $(this).removeClass("large");
+  // });
+
   $("#q8").hover(
     function(){
-      $(this).addClass("large");
-  },
-  function(){
-      $(this).removeClass("large");
-  });
+      $(this).toggleClass("large");
+  }
+  );
 // 第9問  id='q9'の要素をクリックしたらこの要素に設定してあるdata属性をconsoleに表示せよ。
   $("#q9").click(function(){
-    console.log($(this).attr("data-text"));
+    console.log($(this).data("text"));
   });
 // 第10問 id='q10'の子要素をクリックしたら、その要素のインデックスと等しいid='q11'の子要素にlargeというクラスを追加せよ。
-  $10_li = $("#q10 li");
-  $11_li = $("#q11 li");
+  var $10_li = $("#q10 li");
+  var $11_li = $("#q11 li");
   $10_li.click(function(){
-    let clickedIndex = $10_li.index($(this));
+    var clickedIndex = $10_li.index($(this));
     $11_li.eq(clickedIndex).addClass("large");
   })
+
+});
 </script>
 </body>
 </html>
