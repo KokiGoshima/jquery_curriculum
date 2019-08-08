@@ -71,10 +71,60 @@
 
       $(function() {
 
-        $("#js-search-button")
+        $("#js-search-button").click(function(){
+          var input = $("#js-search-word").val();
+          // console.log(input);
+          $.ajax({
+            url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+            type: 'GET',
+            datatype: 'json',
+            data: {
+              // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+              keyword: input,
+              applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
+              booksGenreId: '001'
+            },
+          }).done(function(data) {
+            // この中にデータ取得後の動きを記述していきます。
+            // 取得するデータ
+            // largeImageUrl
+            // title
+            // artistName
+            // publisherName
+            // itemUrl
 
+            // console.log(data.Items[0].Item);
+            // let img = data.Items[0].Item.largeImageUrl;
 
-      }
+            var items = data.Items;
+
+            // console.log(items);
+
+            items.forEach(function(item){
+              // console.log(item.Item.title);
+              var itemUrl = item.Item.itemUrl;
+              var img_url = item.Item.largeImageUrl;
+              var title = item.Item.title;
+              var artistName = item.Item.artistName;
+              var publisherName = item.Item.publisherName;
+              $(".lists").append(
+                `<li class='lists__item'>
+                <div class='lists__item__inner'>
+                <a href='${itemUrl}' class='lists__item__link' target='_blank'>
+                <img src='${img_url}' class='lists__item__img' alt=''>
+                <p class='lists__item__detail'>作品名：${title}</p>
+                <p class='lists__item__detail'>作者　：${artistName}</p>
+                <p class='lists__item__detail'>出版社：${publisherName}</p>
+                </a>
+                </div>
+                </li>`
+              );
+            })
+          });
+
+        })
+
+      })
     </script>
   </body>
 </html>
