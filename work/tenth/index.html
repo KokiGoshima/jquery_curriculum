@@ -65,19 +65,11 @@
       //    </a>
       //  </div>
       // </li>
-      //
-      //
-      //
+
 
       $(function() {
 
-        // 153行目のinput.bytes()を使うために記述
-        String.prototype.bytes = function () {
-          return(encodeURIComponent(this).replace(/%../g,"x").length);
-        }
-
-        // まだ何も入力されていないときはinput_countの値が設定されてない。95行目でエラー。
-        // エラー出さないために宣言
+        // まだ何も入力されていないときはinput_countの値が設定されてない。95行目でエラー出さないために宣言
         var input_count;
 
         $("#js-search-word").change(function(){
@@ -87,28 +79,22 @@
         });
 
         $("#js-search-button").click(function(){
-          // console.log(input_count);
           var input = $("#js-search-word").val();
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
             type: 'GET',
             datatype: 'json',
+            timeout : 3000,
             data: {
               // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
               keyword: input,
               applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
               booksGenreId: '001',
               hits: 20,
-              page: input_count
-            },
+              page: input_count,
+            }
           }).done(function(data) {
             // この中にデータ取得後の動きを記述していきます。
-            // 取得するデータ
-            // largeImageUrl
-            // title
-            // artistName
-            // publisherName
-            // itemUrl
 
             if(data.count === 0){
               $(".lists").html(
@@ -116,13 +102,9 @@
               );
             };
 
-
             var items = data.Items;
 
-            console.log(data);
-
             items.forEach(function(item){
-              console.log(item.Item);
               var itemUrl = item.Item.itemUrl;
               var img_url = item.Item.largeImageUrl;
               var title = item.Item.title;
@@ -142,20 +124,24 @@
                 </li>`
               );
 
-
             })
           })
-          .fail(function(){
+          .fail(function(err){
+            if(!err.responseJSON){
+              $(".lists").html("<div class=message>インターネットに繋がっていません。</div>");
+            }else{
+              error_description = err.responseJSON.error_description;
+              if(input === ""){
+                $(".lists").html(`<div class=message>${error_description}</div>`);
+              }else if(input.length === 1){
+                $(".lists").html(`<div class=message>${error_description}</div>`);
+              }else{
+                $(".lists").html(`<div class=message>${error_description}</div>`);
+              };
+            }
 
-            if(input === ""){
-              $(".lists").html('<div class=message>キーワードを入力して下さい。</div>');
-            };
 
-            if(input.bytes() === 1){
-              $(".lists").html('<div class=message>検索ワードは半角英数字2文字以上で入力してください</div>');
-            };
-
-          })
+          });
 
           input_count++;
 
