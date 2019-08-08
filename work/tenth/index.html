@@ -94,8 +94,9 @@
             }
           }).done(function(data) {
             // この中にデータ取得後の動きを記述していきます。
-
+            var result = "";
             console.log(data);
+            console.log(page);
 
             if(data.count === 0){
               $(".lists").html(
@@ -112,22 +113,22 @@
               var artistName = item.Item.artistName;
               var publisherName = item.Item.publisherName;
 
-              console.log(page);
+              $val = `<li class='lists__item'>
+                      <div class='lists__item__inner'>
+                      <a href='${itemUrl}' class='lists__item__link' target='_blank'>
+                      <img src='${img_url}' class='lists__item__img' alt=''>
+                      <p class='lists__item__detail'>作品名：${title}</p>
+                      <p class='lists__item__detail'>作者　：${artistName}</p>
+                      <p class='lists__item__detail'>出版社：${publisherName}</p>
+                      </a>
+                      </div>
+                      </li>`;
 
-                $(".lists").append(
-                  `<li class='lists__item'>
-                  <div class='lists__item__inner'>
-                  <a href='${itemUrl}' class='lists__item__link' target='_blank'>
-                  <img src='${img_url}' class='lists__item__img' alt=''>
-                  <p class='lists__item__detail'>作品名：${title}</p>
-                  <p class='lists__item__detail'>作者　：${artistName}</p>
-                  <p class='lists__item__detail'>出版社：${publisherName}</p>
-                  </a>
-                  </div>
-                  </li>`
-                );
+              result += $val;
 
             })
+
+            $(".lists").prepend(result);
           })
           .fail(function(err){
             if(!err.responseJSON){
