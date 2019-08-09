@@ -108,7 +108,6 @@
 
         // done以降の処理
         var success = function(data){
-          console.log(data);
           var result = "";
 
           if(data.count === 0){
@@ -124,8 +123,6 @@
               var title = item.Item.title;
               var artistName = item.Item.author;
               var publisherName = item.Item.publisherName;
-
-              // console.log(item);
 
               result += "<li class='lists__item'><div class='lists__item__inner'><a href="
               + itemUrl
@@ -151,7 +148,7 @@
             $(".lists").html("<div class=message>インターネットに繋がっていません。</div>");
           }else{
             var error_description = err.responseJSON.error_description;
-            var error_description_html = "<div class='message'>" + error_description + "</div>"
+            var error_description_html = "<div class='message'>" + error_description + "</div>";
             if(input === ""){
               $(".lists").html(error_description_html);
             }else if(input.length === 1){
