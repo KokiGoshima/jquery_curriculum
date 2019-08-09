@@ -72,66 +72,18 @@
         var page;
         var last_input;
 
-        // done以降の処理
-        var success = function(data){
-          var result = "";
-
-          if(data.count === 0){
-            $(".lists").html(
-              '<div class=message>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>'
-            );
-          };
-
-          var items = data.Items;
-
-          items.forEach(function(item){
-            var itemUrl = item.Item.itemUrl;
-            var img_url = item.Item.largeImageUrl;
-            var title = item.Item.title;
-            var artistName = item.Item.artistName;
-            var publisherName = item.Item.publisherName;
-
-            $val = `<li class='lists__item'>
-                    <div class='lists__item__inner'>
-                    <a href='${itemUrl}' class='lists__item__link' target='_blank'>
-                    <img src='${img_url}' class='lists__item__img' alt=''>
-                    <p class='lists__item__detail'>作品名：${title}</p>
-                    <p class='lists__item__detail'>作者　：${artistName}</p>
-                    <p class='lists__item__detail'>出版社：${publisherName}</p>
-                    </a>
-                    </div>
-                    </li>`;
-
-            result += $val;
-
-          })
-
-          $(".lists").prepend(result);
-        };
-
-        // fail以降の処理
-        var failed = function(err, input){
-          if(!err.responseJSON){
-            $(".lists").html("<div class=message>インターネットに繋がっていません。</div>");
-          }else{
-            var error_description = err.responseJSON.error_description;
-            if(input === ""){
-              $(".lists").html(`<div class=message>${error_description}</div>`);
-            }else if(input.length === 1){
-              $(".lists").html(`<div class=message>${error_description}</div>`);
-            }else{
-              $(".lists").html(`<div class=message>${error_description}</div>`);
-            };
-          }
-        };
-
-        $("#js-search-button").click(function(){
+        // click以降の処理
+        var click = function(){
           var input = $("#js-search-word").val();
 
           if(input !== last_input){
             $(".lists").empty();
             page = 1;
-          };
+            last_input = input;
+          } else {
+            // 2ページ以降を表示したいので+1する
+            page++;
+          }
 
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
@@ -152,11 +104,67 @@
           .fail(function(err){
             failed(err, input);
           });
+        }
 
-          // 2ページ以降を表示したいので+1する
-          page++;
-          last_input = input;
+        // done以降の処理
+        var success = function(data){
+          console.log(data);
+          var result = "";
 
+          if(data.count === 0){
+            $(".lists").html(
+              '<div class=message>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>'
+            );
+          } else {
+            var items = data.Items;
+
+            items.forEach(function(item){
+              var itemUrl = item.Item.itemUrl;
+              var img_url = item.Item.largeImageUrl;
+              var title = item.Item.title;
+              var artistName = item.Item.author;
+              var publisherName = item.Item.publisherName;
+
+              // console.log(item);
+
+              result += "<li class='lists__item'><div class='lists__item__inner'><a href="
+              + itemUrl
+              + " class='lists__item__link' target='_blank'><img src="
+              + img_url
+              + " class='lists__item__img' alt=''><p class='lists__item__detail'>作品名："
+              + title
+              + "</p><p class='lists__item__detail'>作者　："
+              + artistName
+              + "</p><p class='lists__item__detail'>出版社："
+              + publisherName
+              + "</p></a></div></li>";
+
+            })
+
+            $(".lists").prepend(result);
+          }
+        };
+
+        // fail以降の処理
+        var failed = function(err, input){
+          if(!err.responseJSON){
+            $(".lists").html("<div class=message>インターネットに繋がっていません。</div>");
+          }else{
+            var error_description = err.responseJSON.error_description;
+            var error_description_html = "<div class='message'>" + error_description + "</div>"
+            if(input === ""){
+              $(".lists").html(error_description_html);
+            }else if(input.length === 1){
+              $(".lists").html(error_description_html);
+            }else{
+              $(".lists").html(error_description_html);
+            };
+          }
+        };
+
+        // クリックイベント発火
+        $("#js-search-button").click(function(){
+          click();
         });
 
       });
